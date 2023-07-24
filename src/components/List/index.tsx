@@ -1,12 +1,10 @@
 import { Item } from "@/components";
+import { ICar } from "@/interface/Car";
 
 const List = () => {
-  // const Loading = () => {
-  //   return <div>Loading...</div>;
-  // };
   return (
     <ul>
-      <Item />
+      <Item  />
     </ul>
   );
 };

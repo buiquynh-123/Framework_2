@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import "./App.css";
 
-import { List } from "./components";
+// import Counter from "./components/Counter";
+
 import Form from "./components/Form";
-import { ProductProvider } from "./reducers/productReducer";
+import List from "./components/List";
+
 function App() {
   return (
     <div>
       <div className="w-96 mx-auto border">
-        <ProductProvider>
-          <Form />
-          <List />
-        </ProductProvider>
+        <Form />
+        <List />
       </div>
     </div>
   );

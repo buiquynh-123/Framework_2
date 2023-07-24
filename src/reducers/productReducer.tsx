@@ -1,52 +1,41 @@
-import { createContext, useReducer } from "react";
-import { IProduct } from "@/interface/Product";
-export const ProductContext = createContext();
-
-export const initialState = {
+/* eslint-disable no-case-declarations */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { produce } from "immer";
+const initialState = {
   products: [],
   loading: false,
+  error: "",
 };
-interface IState {
-  products: IProduct[];
-  loading: boolean;
-}
-export const productReducer = (state: IState, action: any) => {
-  switch (action.type) {
-    case "SET_PRODUCT":
-      return {
-        ...state,
-        products: action.payload,
-      };
-    case "ADD_PRODUCT":
-      return {
-        ...state,
-        products: [...state.products, action.payload],
-      };
-
-    case "UPDATE_PRODUCT":
-      return {
-        ...state,
-        products: state.products.map((product) => {
-          product.id === action.payload.id ? action.payload : product;
-        }),
-      };
-    case "DELETE_PRODUCT":
-      return {
-        ...state,
-        products: state.products.filter(
-          (product) => product.id !== action.payload
-        ),
-      };
-    default:
-      return state;
-  }
-};
-export const ProductProvider = ({ children }: any) => {
-  const [state, dispatch] = useReducer(productReducer, initialState);
-
-  return (
-    <ProductContext.Provider value={{ state, dispatch }}>
-      {children}
-    </ProductContext.Provider>
-  );
+export const productReducer = (state = initialState, action: any) => {
+  return produce(state, (drafState: any) => {
+    switch (action.type) {
+      case "product/fetching":
+        drafState.loading = true;
+        break;
+      case "product/fetchingSuccess":
+        drafState.products = action.payload;
+        break;
+      case "product/fetchingFailed":
+        drafState.error = action.payload;
+        break;
+      case "product/fetchingFinally":
+        drafState.isLoading = false;
+        break;
+      case "product/addProduct":
+        drafState.products.push(action.paylad);
+        break;
+      case "product/updateProduct":
+        const product = action.payload;
+        drafState.products = state.products.map((item: any) =>
+          item.id === product.id ? product : item
+        );
+        break;
+      case "product/deleteProduct":
+        const id = action.payload;
+        drafState.products = state.products.filter(
+          (item: any) => item.id != id
+        );
+        break;
+    }
+  });
 };
