@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ICar } from "@/interface/Car";
 import instance from "./instance";
 const addCar = (car: ICar) => {
@@ -6,7 +7,13 @@ const addCar = (car: ICar) => {
 const getCar = () => {
   return instance.get("cars");
 };
+const getCarById = (id: any) => {
+  return instance.get(`cars/${id}`);
+};
 const deleteCar = (id: number) => {
   return instance.delete(`cars/${id}`);
 };
-export { addCar, getCar, deleteCar };
+const updateCar = (product: any) => {
+  return instance.put(`cars/${product.id}`, product);
+};
+export { addCar, getCar, getCarById, deleteCar, updateCar };

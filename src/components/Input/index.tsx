@@ -1,5 +1,4 @@
-import { SetStateAction, useReducer, useState } from "react";
-import { initialState, productReducer } from "@/reducers/productReducer";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type InputProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };

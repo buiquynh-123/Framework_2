@@ -1,20 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/Home";
+import BaseLayout from "./layouts/base";
+import LayoutAdmin from "./layouts/admin";
+import ProductAdd from "./pages/admin/productAdd";
+import ProductList from "./pages/admin/productList";
+import ProductEdit from "./pages/admin/productEdit";
 
-import { List } from "./components";
-import Form from "./components/Form";
-import { ProductProvider } from "./reducers/productReducer";
 function App() {
   return (
-    <div>
-      <div className="w-96 mx-auto border">
-        <ProductProvider>
-          <Form />
-          <List />
-        </ProductProvider>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<BaseLayout />}>
+        <Route index element={<HomePage />}></Route>
+      </Route>
+
+      <Route path="/admin" element={<LayoutAdmin />}>
+        <Route index element={<ProductList />}></Route>
+        <Route path="products/add" element={<ProductAdd />}></Route>
+        <Route path="products/:id/edit" element={<ProductEdit />}></Route>
+      </Route>
+    </Routes>
   );
 }
-
 export default App;

@@ -1,45 +1,60 @@
-import { SetStateAction, useContext, useReducer, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-refresh/only-export-components */
+import { SetStateAction, useState } from "react";
 import { Button, Input } from "..";
 import { AiOutlinePlus } from "react-icons/ai";
-import {
-  ProductContext,
-  initialState,
-  productReducer,
-} from "@/reducers/productReducer";
-import { addCar } from "@/api/car";
+import { connect, useSelector } from "react-redux";
+// eslint-disable-next-line react-refresh/only-export-components
 
-const Form = () => {
+import { addProducts } from "@/action/product";
+
+const Form = ({ addProducts }: any) => {
+  const product = useSelector((state: any) => state.products.productItem);
+
   const [valueInput, setValueInput] = useState("");
-  const { state, dispatch } = useContext(ProductContext);
+
   const handleChangeValue = (e: {
     target: { value: SetStateAction<string> };
   }) => {
-    setValueInput(e.target.value);
+    if (product) {
+      setValueInput(e.target.value);
+    } else {
+      setValueInput(e.target.value);
+    }
+    console.log(valueInput);
   };
+
   const onSubmit = async (e: { preventDefault: () => void }) => {
-    console.log("submit đi");
     e.preventDefault();
     if (valueInput) {
       const newData = {
         name: valueInput,
       };
-      await addCar(newData);
-
-      dispatch({ type: "ADD_PRODUCT", payload: newData });
+      await addProducts(newData);
+      setValueInput("");
     }
-    setValueInput("");
   };
+
   return (
-    <form
-      className="border-b mb-3 p-3 flex justify-between items-center"
-      onSubmit={onSubmit}
-    >
+    <form className="border-b mb-3 p-3 flex justify-between items-center">
       <Input onChange={handleChangeValue} />
       <Button primary>
-        <AiOutlinePlus />
+        <AiOutlinePlus onClick={onSubmit} />
       </Button>
+      {/* {state.productItem.name ? (
+        <Button>
+          <p onClick={onSubmit}>Update</p>
+        </Button>
+      ) : (
+        <Button primary>
+          <AiOutlinePlus onClick={onHandleUpdate} />
+        </Button>
+      )} */}
     </form>
   );
 };
 
-export default Form;
+const mapDispatchToProps = {
+  addProducts,
+};
+export default connect(null, mapDispatchToProps)(Form);

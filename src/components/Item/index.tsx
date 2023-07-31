@@ -1,29 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-refresh/only-export-components */
 // import React from "react";
 import Button from "../Button";
-import { useEffect, useReducer, useContext } from "react";
-import { initialState, productReducer } from "@/reducers/productReducer";
-import { deleteCar, getCar } from "@/api/car";
 import { IProduct } from "@/interface/Product";
-import { ProductContext } from "@/reducers/productReducer";
-
-const Item = () => {
-  // const [state, dispatch] = useReducer(productReducer, initialState);
-  const { state, dispatch } = useContext(ProductContext);
-  console.log(state);
-  useEffect(() => {
-    getCar().then(({ data }) => {
-      dispatch({ type: "SET_PRODUCT", payload: data });
-    });
-  }, []);
-  console.log(state.products);
-  const handleRemove = async (id: any) => {
-    await deleteCar(id);
-    dispatch({ type: "DELETE_PRODUCT", payload: id });
+import { connect } from "react-redux";
+import { removeProduct } from "@/action/product";
+import instance from "@/api/instance";
+import { useDispatch, useSelector } from "react-redux";
+const Item = ({ removeProduct }: any) => {
+  const dispatch = useDispatch();
+  const products = useSelector((state: any) => state.products.products);
+  console.log(products);
+  const handleRemove = (id: any) => {
+    console.log(id);
+    removeProduct(id);
   };
-
+  const handleGetById = async (id: any) => {
+    console.log(id);
+    const data = await instance.get(`/products/${id}`);
+    console.log(data);
+    dispatch({ type: "productById/fetchingSuccess", payload: data });
+  };
   return (
     <>
-      {state.products.map((product: IProduct) => {
+      {products.map((product: IProduct) => {
         return (
           <li key={product?.id}>
             <span className="mr-4">{product.name}</span>
@@ -31,11 +32,17 @@ const Item = () => {
             <Button danger onClick={() => handleRemove(product.id)}>
               Remove
             </Button>
+            <Button danger onClick={() => handleGetById(product.id)}>
+              update
+            </Button>
           </li>
         );
       })}
     </>
   );
 };
+const mapDispatchToProps = {
+  removeProduct,
+};
 
-export default Item;
+export default connect(null, mapDispatchToProps)(Item);
